@@ -1,14 +1,33 @@
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
+#![allow(dead_code)]
+
+mod field_element;
+mod utils;
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::{field_element::FieldElement, utils::lambda};
 
     #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
+    fn rsa_encryption() {
+        // Key Generation.
+        let p = 61;
+        let q = 53;
+
+        let n = p * q;
+        let l_n = lambda(p, q);
+
+        let e = FieldElement::new(17, l_n);
+        let d = e.inv();
+
+        let public_key = (e, n);
+        let private_key = (d, n);
+
+        // Encryption / Decryption.
+        let message = FieldElement::new(1234, n);
+        let ciphertext = message.pow(public_key.0);
+
+        let message_prime = ciphertext.pow(private_key.0);
+
+        assert_eq!(message, message_prime);
     }
 }
