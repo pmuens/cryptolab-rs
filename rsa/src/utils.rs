@@ -14,6 +14,12 @@ pub(crate) fn egcd(a: i128, b: i128) -> (i128, i128, i128) {
     (old_r, old_s, old_t)
 }
 
+// See: https://en.wikipedia.org/wiki/Carmichael_function
+pub(crate) fn lambda(p: i128, q: i128) -> i128 {
+    let (gcd, _, _) = egcd(p - 1, q - 1);
+    (p - 1) * (q - 1) / gcd
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -28,5 +34,10 @@ mod tests {
         assert_eq!(egcd(55, 79), (1, 23, -16));
         assert_eq!(egcd(33, 44), (11, -1, 1));
         assert_eq!(egcd(50, 70), (10, 3, -2));
+    }
+
+    #[test]
+    fn lambda_basic() {
+        assert_eq!(lambda(17, 19), 144);
     }
 }
