@@ -29,5 +29,14 @@ mod tests {
         let message_prime = ciphertext.pow(private_key.0);
 
         assert_eq!(message, message_prime);
+
+        // Signing / Verifying.
+        //  Note that the message is usually hashed.
+        let message = FieldElement::new(1234, n);
+        let signature = message.pow(private_key.0);
+
+        let signature_prime = signature.pow(public_key.0);
+
+        assert_eq!(message, signature_prime);
     }
 }
